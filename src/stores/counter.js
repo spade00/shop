@@ -1,4 +1,5 @@
 import{defineStore} from "pinia";
+import {ref} from "vue";
 
 export default defineStore('menu',{
   persist:{
@@ -13,15 +14,14 @@ export default defineStore('menu',{
   state(){
     return{
       activeIndex:0,
+      Goods_data:{},
+      imag:[""],
     }
   },
   getters:{
 
   },
   actions:{
-    setActive(active){
-      this.activeIndex = active
-      console.log(active+" "+this.activeIndex)
-    }
+
   }
 })

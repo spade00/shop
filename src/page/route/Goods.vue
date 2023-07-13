@@ -1,54 +1,65 @@
 <script setup>
-import {reactive} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import {showToast} from "vant";
+import Store from "@/stores/counter"
+import request from "@/utils/request";
 
 const onClickLeft = () => history.back();
 
 const GoodsData = reactive({
-  images:[
-    'https://fastly.jsdelivr.net/npm/@vant/assets/apple-1.jpeg',
-    'https://fastly.jsdelivr.net/npm/@vant/assets/apple-2.jpeg',
-  ],
   data:{
-      description:"2017-10-26发售",
-      tag:["全区中文","1-2人","97分","动作"],
-      price:"260",
-      introductionToThe:"游戏简介：本款游戏由任天堂开发游戏简介：本款游戏由任天堂开发游戏简介：\n" +
-          "        本款游戏由任天堂开发游戏简介：本款游戏由任天堂开发游戏简介：本款游戏由任天堂开发游戏简介：\n" +
-          "        本款游戏由任天堂开发,游戏简介：本款游戏由任天堂开发游戏简介：本款游戏由任天堂开发游戏简介：\n" +
-          "        本款游戏由任天堂开发游戏简介：本款游戏由任天堂开发游戏简介：本款游戏由任天堂开发游戏简介：\n" +
-          "        本款游戏由任天堂开发," +
-          "游戏简介：本款游戏由任天堂开发游戏简介：本款游戏由任天堂开发游戏简介：\n" +
-          "        本款游戏由任天堂开发游戏简介：本款游戏由任天堂开发游戏简介：本款游戏由任天堂开发游戏简介：\n" +
-          "        本款游戏由任天堂开发",
-      payAttentionTo:"购买提示：游戏版本随机发，不支持7天无理由退款"
+    categori_id:3,
+    description:"2020-10-23发售",
+    img:"src/assets/塞尔达传说.jpg",
+    introductionToThe:"游戏简介：本款游戏由Sony开发",
+    price:300,
+    product_id:3,
+    tag:"全区中文，动作，角色扮演",
+    title:"Gt7"
   }
 })
 
 
-const onClickIcon = ()=>showToast('点击图标')
-const onClickButton = ()=>showToast('点击按钮')
+const onClickIcon = ()=>showToast('客服')
+const onClickBuy = ()=>showToast('购买成功')
+const onClickShopCar = ()=>{
+  request.put("/addShopCar",{
+    ProductID:GoodsData.data.product_id,
+    Tag: GoodsData.data.tag
+  }).then(res=>{
+    showToast('加入购物车成功')
+  }).catch(err=>{
+    showToast("加入购物车失败")
+    console.log(err)
+  })
+}
+
+const store = Store()
+onMounted(()=>{
+  GoodsData.data = store.Goods_data
+
+})
 </script>
 
 <template>
   <div class="Goods-bg">
     <div class="Goods-nav-bar">
-      <van-nav-bar :title="$route.query.name" left-text="返回" left-arrow @click-left="onClickLeft"/>
+      <van-nav-bar :title="GoodsData.data.title" left-text="返回" left-arrow @click-left="onClickLeft"/>
     </div>
     <div class="Goods-swipe">
       <van-swipe :autoplay="3000" lazy-render height="250">
-        <van-swipe-item v-for="image in GoodsData.images" :key="image">
-          <img :src="image"  alt="" height="250"/>
+        <van-swipe-item>
+          <img :src="GoodsData.data.img"  alt="" height="250"/>
         </van-swipe-item>
       </van-swipe>
     </div>
     <div class="Goods-title">
       <div>
-        <h1 style="">{{$route.query.name}}</h1>
-        <h3 style="color: red;margin: 10px">260</h3>
+        <h1 style="">{{GoodsData.data.title}}</h1>
+        <h3 style="color: red;margin: 10px">{{GoodsData.data.price}}</h3>
       </div>
       <p>{{GoodsData.data.description}}</p>
-      <van-tag type="primary" v-for="item in GoodsData.data.tag">{{item}}</van-tag>
+      <van-tag type="primary">{{GoodsData.data.tag}}</van-tag>
     </div>
     <div class="Goods-grid">
       <van-grid icon-size="15" border>
@@ -60,14 +71,14 @@ const onClickButton = ()=>showToast('点击按钮')
     </div>
     <div class="Goods-content" style="margin: 10px">
       <h2>游戏介绍</h2>
-      <h3>{{GoodsData.data.payAttentionTo}}</h3>
+      <h3>购买提示:游戏版本随机发，不支持7天无理由退款</h3>
       <p>{{GoodsData.data.introductionToThe}}</p>
     </div>
     <div class="Goods-action-bar" style="height: 5rem;">
       <van-action-bar>
         <van-action-bar-icon icon="chat-o" @click="onClickIcon" text="客服" />
-        <van-action-bar-button color="#be99ff" type="warning" @click="onClickButton" text="加入购物车" />
-        <van-action-bar-button color="#7232dd" type="danger" @click="onClickButton" text="立即购买" />
+        <van-action-bar-button color="#be99ff" type="warning" @click="onClickShopCar" text="加入购物车" />
+        <van-action-bar-button color="#7232dd" type="danger" @click="onClickBuy" text="立即购买" />
       </van-action-bar>
     </div>
   </div>

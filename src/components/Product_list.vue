@@ -1,16 +1,20 @@
 <script setup>
 import {reactive} from "vue";
 import router from "@/router";
+import Store from "@/stores/counter"
 const props = defineProps({
   data:Array
 })
 
+
+const store = Store()
+
 function theJumpPage(index){
+  store.Goods_data = props.data[index]
+  store.imag = props.data[index].img.split(",")
+  console.log(store.imag)
   router.push({
     path:"/detail",
-    query:{
-      name:props.data[index].title
-    }
   })
 }
 </script>

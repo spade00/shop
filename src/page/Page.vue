@@ -2,7 +2,7 @@
 import {onMounted, ref} from 'vue';
 import Main from "@/page/main/Main.vue";
 import Message from "@/page/message/Message.vue";
-import Order from "@/page/order/Order.vue";
+import Order from "@/page/order/ShopCar.vue";
 import My from "@/page/my/My.vue";
 import Store from "@/stores/counter"
 import { storeToRefs } from 'pinia'

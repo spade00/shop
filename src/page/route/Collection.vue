@@ -7,10 +7,10 @@
       <van-tabs v-model:active="activeName" sticky>
         <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
           <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-            <van-tab title="收藏" name="Switch"><Product_list :data="Main_data.Switch"></Product_list></van-tab>
-            <van-tab title="想玩" name="Ps4"><Product_list :data="Main_data.Ps4"></Product_list></van-tab>
-            <van-tab title="玩过" name="Ps5"><Product_list :data="Main_data.Ps5"></Product_list></van-tab>
-            <van-tab title="拥有" name="Ps5"><Product_list :data="Main_data.Ps5"></Product_list></van-tab>
+            <van-tab title="收藏" name="0"><Product_list :data="Main_data.Switch"></Product_list></van-tab>
+            <van-tab title="想玩" name="1"><Product_list :data="Main_data.Ps4"></Product_list></van-tab>
+            <van-tab title="玩过" name="2"><Product_list :data="Main_data.Ps5"></Product_list></van-tab>
+            <van-tab title="拥有" name="3"><Product_list :data="Main_data.Ps5"></Product_list></van-tab>
           </van-list>
         </van-pull-refresh>
       </van-tabs>
