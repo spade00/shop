@@ -21,7 +21,15 @@ const GoodsData = reactive({
 
 
 const onClickIcon = ()=>showToast('客服')
-const onClickBuy = ()=>showToast('购买成功')
+function onClickBuy(){
+  request.post("/PostOrder",{
+    data:[GoodsData.data]
+  }).then(res=>{
+    showToast(res.data)
+  }).catch(err=>{
+    console.log(err)
+  })
+}
 const onClickShopCar = ()=>{
   request.put("/addShopCar",{
     ProductID:GoodsData.data.product_id,
@@ -37,7 +45,6 @@ const onClickShopCar = ()=>{
 const store = Store()
 onMounted(()=>{
   GoodsData.data = store.Goods_data
-
 })
 </script>
 
