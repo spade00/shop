@@ -8,9 +8,15 @@ import Store from "@/stores/counter"
 export default {
   setup() {
     function onSubmit(){
-      showToast('点击按钮')
       request.post("/PostOrder",{
         data:OrderData.data
+      }).then(res=>{
+        showToast(res.data)
+        console.log(OrderData.data.length)
+        OrderData.data.length = 0
+        console.log(OrderData.data.length)
+      }).catch(err=>{
+        console.log(err)
       })
     }
     const onClickLink = () => showToast('修改地址');
@@ -56,11 +62,13 @@ export default {
 
     onMounted(()=>{
       request.get("/ShopCar").then(res=>{
+        console.log(res.data)
         OrderData.data = JSON.parse(res.data)
         Price.value = CalculatePrice();
         console.log(OrderData.data)
       }).catch(err=>{
         console.log(err)
+        OrderData.data = []
       })
     })
     const OrderData = reactive({
@@ -107,28 +115,30 @@ export default {
       <div class="Order-nav-bar">
         <van-nav-bar title="购物车" />
       </div>
-      <div  v-for="(item,index) in OrderData.data" :class="index === OrderData.data.length-1 ? 'last-item' : ''">
-        <van-swipe-cell>
-          <van-card :num="item.count" :price="item.count * item.price" :title="item.title" :thumb="item.img">
-            <template #tags>
-              <div style="padding-top: 10px">
-                <van-tag @click="theJumpPage(index)" plain type="primary">{{item.tag}}</van-tag>
-              </div>
+      <div v-if="OrderData.data.length !== 0">
+        <div v-for="(item,index) in OrderData.data" :class="index === OrderData.data.length-1 ? 'last-item' : ''">
+          <van-swipe-cell>
+            <van-card :num="item.count" :price="item.count * item.price" :title="item.title" :thumb="item.img">
+              <template #tags>
+                <div style="padding-top: 10px">
+                  <van-tag @click="theJumpPage(index)" plain type="primary">{{item.tag}}</van-tag>
+                </div>
+              </template>
+              <template #footer>
+                <van-button size="mini" @click="ButtonAdd(index)">增加</van-button>
+                <van-button size="mini" @click="ButtonSub(index)">减少</van-button>
+              </template>
+            </van-card>
+            <template #right>
+              <van-button square text="删除" type="danger" class="delete-button" @click="Delete(index)"/>
+              <van-button square type="primary" text="收藏" class="delete-button" @click="Collect"/>
             </template>
-            <template #footer>
-              <van-button size="mini" @click="ButtonAdd(index)">增加</van-button>
-              <van-button size="mini" @click="ButtonSub(index)">减少</van-button>
-            </template>
-          </van-card>
-          <template #right>
-            <van-button square text="删除" type="danger" class="delete-button" @click="Delete(index)"/>
-            <van-button square type="primary" text="收藏" class="delete-button" @click="Collect"/>
-          </template>
-        </van-swipe-cell>
+          </van-swipe-cell>
+        </div>
       </div>
-    </div>
-    <div v-if="OrderData.data.length === 0 ">
-      <van-empty image="error" description="购物车为空" />
+      <div v-if="OrderData.data.length === 0">
+        <van-empty image="error" description="购物车为空" />
+      </div>
     </div>
     <div class="goods-submit">
       <van-submit-bar class="Submit" :price="Price*100" button-text="提交订单" @submit="onSubmit"/>
